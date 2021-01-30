@@ -52,8 +52,8 @@ def run():
     
     """ メインウィンドウ """
     root = tk.Tk()                  # メインウィンドウの作成する
-    root.geometry('880x560')        # ウィンドウのサイズの設定
-    root.title('Pal of Kagura')     # ウィンドウのタイトルの設定
+    root.geometry('880x590')        # ウィンドウのサイズの設定
+    root.title('Kagura of Pal')     # ウィンドウのタイトルの設定
     font = ('Helevetica', 14)       # フォントの設定
     font_log = ('Helevetica', 11)   # フォントの設定
     

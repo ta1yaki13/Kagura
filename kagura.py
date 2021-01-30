@@ -9,7 +9,10 @@ class Kagura:
             @param name  Kaguraオブジェクトの名前
         """
         self.name = name
-        self.responder = RandomResponder('Random')
+        self.responder_Random = RandomResponder('Random')    # RandomResponderを生成
+        self.responder_Repeat = RepeatResponder('Repeat')    # RepeatResponderを生成
+        self.responder = self.responder_Repeat               # responderの初期値をRepeatResponderにする
+        
         
     def dialogue(self, input):
         """応答オブジェクトのresponse()を呼び出して、
@@ -18,6 +21,12 @@ class Kagura:
             ＠param input ユーザにより入力された文字列
             戻り値　応答文字列
         """
+        x = random.randint(0, 1)                             # 0か1をランダムに生成
+        
+        if x == 0:
+            self.responder = self.responder_Random
+        else:
+            self.responder = self.responder_Repeat
         return self.responder.response(input)
     
     def get_responder_name(self):
