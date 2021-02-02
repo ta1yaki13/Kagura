@@ -6,6 +6,8 @@ entry = None                # 入力エリアのオブジェクトを保持
 response_area = None        # 応答エリアのオブジェクトを保持
 logListBox = None           # ログ表示用のリストボックスを保持
 action = None               # 'オプション'メニューの状態を保持
+onCanvas = None             # Canvasオブジェクトを保持
+kaguraImages = []           # Kaguraのイメージを保持
 kagura = Kagura('kagura')   # Kaguraのオブジェクトを保持
 
 def putlog(str):
@@ -24,6 +26,33 @@ def prompt():
         kaguraName += ':' + kagura.responder.name
     return kaguraName + '> '
 
+def convertImage(img):
+    """
+        ・画像を切り替える関数
+    """
+    canvas.itemconfig(
+        onCanvas,
+        image = kaguraImages[img]
+        )
+    
+def convertLooks():
+    """
+        ・機嫌値を判定して画像を変えるための
+        　convertImage()関数を呼び出す関数
+    """
+    changeEmotion = kagura.emotion.mood
+    
+    if    -5 <= changeEmotion <= 5:
+        convertImage(0)
+    elif -10 <= changeEmotion <= -5:
+        convertImage(1)
+    elif -15 <= changeEmotion <= -10:
+        convertImage(2)
+    elif   5 <= changeEmotion <= 15:
+        convertImage(3)
+
+
+
 def talk():
     """
         対話を行う関数
@@ -40,6 +69,7 @@ def talk():
         putlog('> ' + value)                    # 入力文字列引数にしてputlog()を呼ぶ
         putlog(prompt() + response)             # 応答メッセージを引数にしてputlog()を呼ぶ
         entry.delete(0, tk.END)                 # 入力エリアをクリアする
+    convertLooks()
         
 """
 ###############################################################################################
@@ -48,7 +78,7 @@ def talk():
 """
 
 def run():
-    global entry, response_area, logListBox, action    # グローバル変数を使用するための記述
+    global entry, response_area, logListBox, action, canvas, onCanvas, kaguraImages    # グローバル変数を使用するための記述
     
     """ メインウィンドウ """
     root = tk.Tk()                  # メインウィンドウの作成する
@@ -90,11 +120,18 @@ def run():
         bd     = 2           # 枠線の幅の設定
         )
     canvas.place(x = 370, y = 0)                                  # メインウィンドウ上に配置する
-    img = tk.PhotoImage(file = 'kaguraPngFile/kaguraUsual.png')   #  表示するイメージを用意
-    canvas.create_image(                                          # キャンバス上にイメージを配置する
+    
+    """ Kaguraのイメージを用意 """
+    kaguraImages.append(tk.PhotoImage(file = "kaguraPngFile/kaguraUsual.png"))
+    kaguraImages.append(tk.PhotoImage(file = "kaguraPngFile/kaguraEmpty.png"))
+    kaguraImages.append(tk.PhotoImage(file = "kaguraPngFile/kaguraAngry.png"))
+    kaguraImages.append(tk.PhotoImage(file = "kaguraPngFile/kaguraSmile.png"))
+    
+    """ キャンバス上にイメージを作成 """
+    onCanvas = canvas.create_image(                               # キャンバス上にイメージを配置する
         0,                                                        # x座標
         0,                                                        # y座標
-        image = img,                                              # 配置するイメージオブジェクトを指定する
+        image  = kaguraImages[0],                                 # 配置するイメージオブジェクトを指定する
         anchor = tk.NW                                            # 配置の起点となる位置を左上隅に指定する
         )
     
